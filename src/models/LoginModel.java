@@ -1,5 +1,7 @@
 package models;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,12 +26,38 @@ public class LoginModel extends DBConnect {
 		this.admin = admin;
 	}
 		
+	static String createHashes(String passwd) throws NoSuchAlgorithmException {
+
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(passwd.getBytes());
+
+		byte byteData[] = md.digest();
+
+		// convert the byte to hex format method 1
+		StringBuffer sbHash = new StringBuffer();
+		for (int i = 0; i < byteData.length; i++) {
+			sbHash.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+		}
+
+		System.out.println("Hash password created => " + sbHash.toString());
+
+		return sbHash.toString();
+	}
+
 	public Boolean getCredentials(String username, String password){
+		 String passwordHash="";
+		 try {
+			
+			 passwordHash= createHashes(password);
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
            
         	String query = "SELECT * FROM users WHERE name = ? and password = ?;";
             try(PreparedStatement stmt = connection.prepareStatement(query)) {
                stmt.setString(1, username);
-               stmt.setString(2, password);
+               stmt.setString(2, passwordHash);
                ResultSet rs = stmt.executeQuery();
                 if(rs.next()) { 
                  

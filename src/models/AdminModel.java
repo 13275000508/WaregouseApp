@@ -1,5 +1,7 @@
 package models;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,14 +18,41 @@ public class AdminModel extends DBConnect {
 	DBConnect conn = null;
 	Statement stmt = null;
 	
+	
+	static String createHashes(String passwd) throws NoSuchAlgorithmException {
+
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(passwd.getBytes());
+
+		byte byteData[] = md.digest();
+
+		// convert the byte to hex format method 1
+		StringBuffer sbHash = new StringBuffer();
+		for (int i = 0; i < byteData.length; i++) {
+			sbHash.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+		}
+
+		System.out.println("Hash password created => " + sbHash.toString());
+
+		return sbHash.toString();
+	}
+	
 	public int addUser(User user) {
 		 String sql = null;
 		 int adduser=0;
+		 String passwordHash="";
+		 try {
+			
+			 passwordHash= createHashes(user.getPassword());
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		 sql = "INSERT INTO users(name, password, admin) " +
 				  "VALUES (?,?,?)";
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1,user.getName());
-			statement.setString(2,user.getPassword());
+			statement.setString(2,passwordHash);
 			statement.setString(3,user.getAdmin());
 		
 			adduser= statement.executeUpdate();

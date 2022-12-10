@@ -39,8 +39,6 @@ public class LoginModel extends DBConnect {
 			sbHash.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
 		}
 
-		System.out.println("Hash password created => " + sbHash.toString());
-
 		return sbHash.toString();
 	}
 
@@ -54,7 +52,7 @@ public class LoginModel extends DBConnect {
 			e1.printStackTrace();
 		}
            
-        	String query = "SELECT * FROM users WHERE name = ? and password = ?;";
+        	String query = "SELECT * FROM warehouse_users WHERE name = ? and password = ?;";
             try(PreparedStatement stmt = connection.prepareStatement(query)) {
                stmt.setString(1, username);
                stmt.setString(2, passwordHash);

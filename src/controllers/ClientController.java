@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicLong;
 
+import Entity.Cargo;
 import application.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -21,7 +22,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import models.Cargo;
 import models.ClientModel;
  
 public class ClientController implements Initializable {
@@ -99,7 +99,12 @@ public class ClientController implements Initializable {
 		 int addcount = cm.addInbound(cargo); 
 		 if(addcount>0) {
 			 lbnotice.setText("Cargo Inbound Successfully");
-			 lbnotice.setVisible(true); // set tableview to visible if not
+			 lbnotice.setVisible(true); 
+			 
+			 txorderNumber.setText("");
+			 txname.setText("");
+			 txcolor.setText("");
+			 txweight.setText("");
 		 }
 		
 		
@@ -115,7 +120,13 @@ public class ClientController implements Initializable {
 		 int outboundcount = cm.outbound(cargo); // load table data from ClientModel List
 		 if(outboundcount>0) {
 			 lbnotice.setText("Cargo Outbound Successfully");
-			 lbnotice.setVisible(true); // set tableview to visible if not
+			 lbnotice.setVisible(true); 
+			 
+			 txorderNumber.setText("");
+			 txname.setText("");
+			 txcolor.setText("");
+			 txweight.setText("");
+			 
 				 }
 		
 	
@@ -140,7 +151,7 @@ public class ClientController implements Initializable {
 	
 	public static void setUserid(int user_id) {
 		userid = user_id;
-		System.out.println("Welcome id " + userid);
+	
 	}
 
 	public ClientController() {
@@ -149,7 +160,8 @@ public class ClientController implements Initializable {
 		  Alert alert = new Alert(AlertType.INFORMATION);
 		  alert.setTitle("Operator View");
 	
-		  alert.setContentText("Welcome !"); alert.showAndWait();
+		  alert.setContentText("Welcome !"); 
+		  alert.showAndWait();
 		 
 		cm = new ClientModel();
 

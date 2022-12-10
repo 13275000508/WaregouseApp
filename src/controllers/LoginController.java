@@ -55,7 +55,7 @@ public class LoginController {
 	public void checkCredentials(String username, String password) {
 		Boolean isValid = model.getCredentials(username, password);
 		if (!isValid) {
-			lblError.setText("User does not exist!");
+			lblError.setText("User or password is wrong!");
 			return;
 		}
 		try {
@@ -73,7 +73,7 @@ public class LoginController {
 				// ***Set user ID acquired from db****
 				int user_id = model.getId();  
 				ClientController.setUserid(user_id);
-				Main.stage.setTitle("Client View");
+				Main.stage.setTitle("Operator View");
 			}
 
 			Scene scene = new Scene(root);

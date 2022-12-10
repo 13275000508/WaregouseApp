@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
  
 import Dao.DBConnect;
+import Entity.Cargo;
 
 public class ClientModel extends DBConnect {
 
@@ -19,7 +20,7 @@ public class ClientModel extends DBConnect {
 
 	public List<Cargo> getInventory(Cargo cargo) {
 		List<Cargo> cargoes = new ArrayList<>();
-		String query = "SELECT name,color,weight FROM inventory WHERE orderNumber = ?;";
+		String query = "SELECT name,color,weight FROM warehouse_inventory WHERE orderNumber = ?;";
 		try (PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setString(1, cargo.getOrderNumber());
 			ResultSet resultSet = statement.executeQuery();
@@ -39,7 +40,7 @@ public class ClientModel extends DBConnect {
 	public int addInbound(Cargo cargo) {
 		 String sql = null;
 		 int addcount=0;
-		 sql = "INSERT INTO inventory(orderNumber,name, color, weight,userid) " +
+		 sql = "INSERT INTO warehouse_inventory(orderNumber,name, color, weight,userid) " +
 				  "VALUES (?,?,?,?,?)";
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1,cargo.getOrderNumber());
@@ -59,17 +60,21 @@ public class ClientModel extends DBConnect {
 	public int outbound(Cargo cargo) {
 		 String sql = null,sql1=null;
 		 int outboundcount=0,addcount=0;
-		 sql = "DELETE FROM inventory where orderNumber = ?";
+		 //delete record from inventory
+		 sql = "DELETE FROM warehouse_inventory where orderNumber = ? and name=? and color=? and weight=?";
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1,cargo.getOrderNumber());
+			statement.setString(2,cargo.getName());
+			statement.setString(3,cargo.getColor());
+			statement.setDouble(4,cargo.getWeight());
 		
-	
 		
 			outboundcount= statement.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error add inventory: " + e);
 		}
-		sql = "INSERT INTO outbound(orderNumber,name, color, weight,userid) " +
+		//add outbound record to outbound
+		sql = "INSERT INTO warehouse_outbound(orderNumber,name, color, weight,userid) " +
 				  "VALUES (?,?,?,?,?)";
 		try (PreparedStatement statement1 = connection.prepareStatement(sql)) {
 			statement1.setString(1,cargo.getOrderNumber());

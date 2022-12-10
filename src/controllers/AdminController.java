@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicLong;
 
-
+import Entity.Cargo;
+import Entity.User;
 import application.Main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -24,8 +25,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import models.AdminModel;
-import models.Cargo;
-import models.User;
 
 
 public class AdminController implements Initializable{
@@ -123,10 +122,7 @@ public class AdminController implements Initializable{
 
 	
 	public AdminController() {
-//		Alert alert = new Alert(AlertType.INFORMATION);
-//		  alert.setTitle("Admin View");
-//		
-//		  alert.setContentText("Welcome !"); alert.showAndWait();
+
 		 
 		am = new AdminModel();
 	}
@@ -176,7 +172,12 @@ public class AdminController implements Initializable{
 		int addcount = am.addUser(user); 
 		 if(addcount>0) {
 			 usernotify.setText("User Added");
-			 usernotify.setVisible(true); // set tableview to visible if not
+			 usernotify.setVisible(true);
+			 
+			 txUser.setText("");
+			 txPassword.setText("");
+			 txAdmin.setText("");
+			
 		 }
 
 		
@@ -189,18 +190,33 @@ public class AdminController implements Initializable{
 		int updatecount = am.updateCargo(cargo); 
 		 if(updatecount>0) {
 			 updatenotify.setText("Update Success");
-			 updatenotify.setVisible(true); // set tableview to visible if not
+			 updatenotify.setVisible(true);
+			 //clear text
+			 txorderNumber.setText("");
+			 txname.setText("");
+			 txcolor.setText("");
+			 txweight.setText("");
+			 	
 		 }
 
 	}
 
 	public void submitDelete() throws IOException {
 		cargo.setOrderNumber(this.txorderNumber1.getText());
+		cargo.setName(this.txname1.getText());
+		cargo.setColor(this.txcolor1.getText());
+		cargo.setWeight(Double.parseDouble(this.txweight1.getText()));
 		
 		int deletecount = am.deleteCargo(cargo); 
 		 if(deletecount>0) {
 			 deletenotify.setText("Delete Success");
-			 deletenotify.setVisible(true); // set tableview to visible if not
+			 deletenotify.setVisible(true);
+			 txorderNumber1.setText("");
+			 txname1.setText("");
+			 txcolor1.setText("");
+			 txweight1.setText("");
+			 
+			
 		 }
 
 	}
